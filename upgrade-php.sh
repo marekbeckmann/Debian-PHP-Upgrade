@@ -104,6 +104,8 @@ function upgradePHP() {
         msg_info "Detected Apache2, updating php version"
         a2dismod php${OLD_PHPVERSION} >/dev/null 2>&1
         a2enmod php${PHP_VERSION} >/dev/null 2>&1
+        a2disconf php${OLD_PHPVERSION}-fpm >/dev/null 2>&1
+        a2enconf php${PHP_VERSION}-fpm >/dev/null 2>&1
         systemctl restart apache2 >/dev/null 2>&1
         msg_ok "Apache2 updated"
     fi
