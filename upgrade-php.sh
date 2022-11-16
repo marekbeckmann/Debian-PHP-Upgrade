@@ -108,10 +108,10 @@ function upgradePHP() {
         msg_ok "Apache2 updated"
     fi
 
-    if [[ "$(systemctl is-active php7.4-fpm)" == "active" ]]; then
+    if [[ "$(systemctl is-active ${OLD_PHPVERSION}-fpm)" == "active" ]]; then
         msg_info "Detected PHP-FPM, updating php version"
-        systemctl stop php7.4-fpm >/dev/null 2>&1
-        systemctl disable php7.4-fpm >/dev/null 2>&1
+        systemctl stop ${OLD_PHPVERSION}-fpm >/dev/null 2>&1
+        systemctl disable ${OLD_PHPVERSION}-fpm >/dev/null 2>&1
         systemctl enable php${PHP_VERSION}-fpm >/dev/null 2>&1
         msg_ok "PHP-FPM updated"
     fi
