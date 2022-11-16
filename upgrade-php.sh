@@ -97,7 +97,7 @@ function upgradePHP() {
     apt-get install -y php8.1 >/dev/null 2>&1
     apt-get full-upgrade -y >/dev/null 2>&1
     PHP_VERSION=$(php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1-2)
-    msg_ok "PHP updated from version ${OLD_PHPVERSION}to ${PHP_VERSION}"
+    msg_ok "PHP updated from version ${OLD_PHPVERSION} to ${PHP_VERSION}"
     msg_info "Setting PHP Version ${PHP_VERSION} as default"
     update-alternatives --set php /usr/bin/php${PHP_VERSION} >/dev/null 2>&1
     if [ -f /etc/apache2/apache2.conf ]; then
