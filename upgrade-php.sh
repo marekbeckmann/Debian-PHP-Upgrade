@@ -14,11 +14,6 @@ CM="${GN}✓${CL}"
 CROSS="${RD}✗${CL}"
 WARN="${DGN}⚠${CL}"
 DEBIAN_FRONTEND=noninteractive
-RAM_SIZE_GB=$(($(vmstat -s | grep -i "total memory" | xargs | cut -d" " -f 1) / 1024 / 1000))
-IP_ADDR="$(hostname --ip-address)"
-HOSTNAME="$(hostname)"
-FQDN="$(hostname -f)"
-OS="$(lsb_release -is)"
 
 function getIni() {
     startsection="$1"
