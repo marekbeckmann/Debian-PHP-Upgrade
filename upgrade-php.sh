@@ -58,19 +58,13 @@ function errorhandler() {
 function header_info {
     clear
     echo -e "${RD}
- 
-
- _______           _______             _______  _______  _______  _______  ______   _______ 
-(  ____ )|\     /|(  ____ )  |\     /|(  ____ )(  ____ \(  ____ )(  ___  )(  __  \ (  ____ \
-| (    )|| )   ( || (    )|  | )   ( || (    )|| (    \/| (    )|| (   ) || (  \  )| (    \/
-| (____)|| (___) || (____)|  | |   | || (____)|| |      | (____)|| (___) || |   ) || (__    
-|  _____)|  ___  ||  _____)  | |   | ||  _____)| | ____ |     __)|  ___  || |   | ||  __)   
-| (      | (   ) || (        | |   | || (      | | \_  )| (\ (   | (   ) || |   ) || (      
-| )      | )   ( || )        | (___) || )      | (___) || ) \ \__| )   ( || (__/  )| (____/\
-|/       |/     \||/         (_______)|/       (_______)|/   \__/|/     \|(______/ (_______/
-                                                                                            
-
-                                                                                     
+                                                   
+ _____ _____ _____    _____                   _     
+|  _  |  |  |  _  |  |  |  |___ ___ ___ ___ _| |___ 
+|   __|     |   __|  |  |  | . | . |  _| .'| . | -_|
+|__|  |__|__|__|     |_____|  _|_  |_| |__,|___|___|
+                           |_| |___|                
+                                                                                    
 ${CL}"
 }
 
@@ -119,6 +113,7 @@ function upgradePHP() {
         systemctl stop php7.4-fpm >/dev/null 2>&1
         systemctl disable php7.4-fpm >/dev/null 2>&1
         systemctl enable php${PHP_VERSION}-fpm >/dev/null 2>&1
+        msg_ok "PHP-FPM updated"
     fi
     if [[ "$(systemctl is-active php8.1-fpm)" == "inactive" ]]; then
         systemctl restart php${PHP_VERSION}-fpm >/dev/null 2>&1
@@ -128,9 +123,9 @@ function upgradePHP() {
         msg_info "Detected Nginx, updating php version"
         sed -i "s/${OLD_PHPVERSION}/${PHP_VERSION}/g" /etc/nginx/nginx.conf >/dev/null 2>&1
         sed -i "s/${OLD_PHPVERSION}/${PHP_VERSION}/g" /etc/nginx/sites-available/* >/dev/null 2>&1
-        if [[ "$(nginx -t)" == *"successful"* ]]; then
+        nginxStatus="$(nginx -t 2>&1)"
+        if [[ "$nginxStatus" = *"successful"* ]]; then
             systemctl restart nginx >/dev/null 2>&1
-            msg_ok "Nginx updated"
         else
             msg_error "Nginx config test failed, please check your config"
         fi
