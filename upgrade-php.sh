@@ -84,7 +84,7 @@ function upgradeSystem() {
 
 function upgradePHP() {
     msg_info "Updating PHP"
-    OLD_PHPVERSION=$(php -v | head -n 1 | cut -d" " -f 2 | cut -d"." -f 1-2)
+    OLD_PHPVERSION="$(php -v | head -n 1 | cut -d" " -f 2 | cut -d"." -f 1-2)"
     apt-get -y install lsb-release ca-certificates apt-transport-https software-properties-common gnupg2 >/dev/null 2>&1
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/sury-php.list >/dev/null 2>&1
     curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/sury-keyring.gpg >/dev/null 2>&1
@@ -94,7 +94,7 @@ function upgradePHP() {
     apt-get -f -m full-upgrade -y >/dev/null 2>&1
     apt-get autoremove -y >/dev/null 2>&1
     update-alternatives --set php /usr/bin/php${PHP_VERSION} >/dev/null 2>&1
-    PHP_VERSION=$(php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1-2)
+    PHP_VERSION="$(php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1-2)"
     msg_ok "PHP updated from version ${OLD_PHPVERSION} to ${PHP_VERSION}"
     msg_info "Setting PHP Version ${PHP_VERSION} as default"
     if [ -f /etc/apache2/apache2.conf ]; then
@@ -109,8 +109,8 @@ function upgradePHP() {
 
     if [[ "$(systemctl is-active ${OLD_PHPVERSION}-fpm)" == "active" ]]; then
         msg_info "Detected PHP-FPM, updating php version"
-        systemctl stop ${OLD_PHPVERSION}-fpm >/dev/null 2>&1
-        systemctl disable ${OLD_PHPVERSION}-fpm >/dev/null 2>&1
+        systemctl stop php${OLD_PHPVERSION}-fpm >/dev/null 2>&1
+        systemctl disable php${OLD_PHPVERSION}-fpm >/dev/null 2>&1
         systemctl enable php${PHP_VERSION}-fpm >/dev/null 2>&1
         msg_ok "PHP-FPM updated"
     fi
