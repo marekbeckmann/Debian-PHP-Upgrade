@@ -90,7 +90,10 @@ function upgradePHP() {
     curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/sury-keyring.gpg >/dev/null 2>&1
     apt-get update -y >/dev/null 2>&1
     apt-get install -y php8.1 >/dev/null 2>&1
+    apt-get update -y >/dev/null 2>&1
     apt-get full-upgrade -y >/dev/null 2>&1
+    apt-get autoremove -y >/dev/null 2>&1
+    update-alternatives --set php /usr/bin/php${PHP_VERSION} >/dev/null 2>&1
     PHP_VERSION=$(php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1-2)
     if [[ "${OLD_PHPVERSION}" == "${PHP_VERSION}" ]]; then
         errorhandler "PHP update failed, check logs"
@@ -98,7 +101,6 @@ function upgradePHP() {
         msg_ok "PHP updated from version ${OLD_PHPVERSION} to ${PHP_VERSION}"
     fi
     msg_info "Setting PHP Version ${PHP_VERSION} as default"
-    update-alternatives --set php /usr/bin/php${PHP_VERSION} >/dev/null 2>&1
     if [ -f /etc/apache2/apache2.conf ]; then
         msg_info "Detected Apache2, updating php version"
         a2dismod php${OLD_PHPVERSION} >/dev/null 2>&1
